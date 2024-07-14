@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+            name="viewport"
+            content="initial-scale=1.0, user-scalable=no, width=device-width"
+    />
+    <title>HELLO，AMAP!</title>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
+<script type="text/javascript">
+    window._AMapSecurityConfig = {
+        securityJsCode: "fbfeef9b1c8afb497379ea26ad704a6a",
+    };
+</script>
+<script src="https://webapi.amap.com/loader.js"></script>
+<script type="text/javascript">
+    AMapLoader.load({
+        key: "6188b415301d5c73acbcd111b1bd7554", //申请好的Web端开发者 Key，调用 load 时必填
+        version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+    })
+        .then((AMap) => {
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: 11, // 初始化地图层级
+                center: [116.397428, 39.90923] // 初始化地图中心点
+            });
+            AMap.plugin('AMap.Transfer', function() {
+                var transfer = new AMap.Transfer({
+                    // 构造换乘查询类的实例
+                    // 可以指定城市，默认为北京
+                    city: '南昌', // 城市名，默认：“北京”
+                    policy: AMap.TransferPolicy.NO_SUBWAY,
+                    map: map, // 显示结果的地图实例
+                    panel: 'container', // 结果展示面板，HTML元素的id
+                    showPolicy: true // 是否显示策略信息
+                });
+
+                // 调用搜索方法
+                transfer.search([
+                    {keyword: '晨辉金谷', city: '南昌'}, // 起点
+                    {keyword: '君悦府', city: '南昌'}    // 终点
+                ], function(status, result) {
+                    if (status === 'complete' && result.info === 'OK') {
+                        // 查询成功
+                        console.log(result);
+                    } else {
+                        // 查询失败
+                        console.error(result.info);
+                    }
+                });
+            });
+        });
+</script>
